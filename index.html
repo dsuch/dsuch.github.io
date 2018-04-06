@@ -1,0 +1,208 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>PyMQI &#8212; PyMQI latest documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     'latest',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Support, consulting and contact" href="support.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="support.html" title="Support, consulting and contact"
+             accesskey="N">next</a> |</li>
+        <li class="nav-item nav-item-0"><a href="#">PyMQI latest documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="pymqi">
+<h1>PyMQI<a class="headerlink" href="#pymqi" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Sponsored by <a class="reference external" href="https://zato.io/docs?pymqi">Zato</a> - Open-Source ESB, SOA, REST, APIs and Cloud Integrations in Python</p>
+</div>
+<p>Other sections:</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="support.html">Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="introduction">
+<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
+<p>PyMQI is a production-ready Python extension for IBM’s messaging &amp;  queuing middleware,
+IBM MQ (formerly know as WebSphere MQ and MQSeries). This allows Python programs to make
+calls to connect to queue managers, send messages to, get messages off queues
+and issue administrative calls, e.g. to create channels or change queues definitions.</p>
+<p>PyMQI has been used in production environments for 10+ years on
+Linux, Windows, Solaris and AIX with queue managers running on Linux,
+Windows, Solarix, AIX, HP-UX and z/OS mainframe. Supported WebSphere MQ versions are
+5.x, 6.x, 7.x, 8.x and 9.x.</p>
+<p>PyMQI is released under a MIT-like <a class="reference external" href="https://github.com/dsuch/pymqi/blob/master/LICENSE">Python license</a>.
+It’s free to use in open-source and proprietary applications.</p>
+<p>Here is some minimal code to put a message on a queue:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pymqi</span>
+
+<span class="n">qmgr</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;QM.1&#39;</span><span class="p">,</span> <span class="s1">&#39;SVRCONN.CHANNEL.1&#39;</span><span class="p">,</span> <span class="s1">&#39;192.168.1.121(1434)&#39;</span><span class="p">)</span>
+
+<span class="n">putq</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">Queue</span><span class="p">(</span><span class="n">qmgr</span><span class="p">,</span> <span class="s1">&#39;TESTQ.1&#39;</span><span class="p">)</span>
+<span class="n">putq</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="s1">&#39;Hello from Python!&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>And here’s some more to get it again:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pymqi</span>
+
+<span class="n">qmgr</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;QM.1&#39;</span><span class="p">,</span> <span class="s1">&#39;SVRCONN.CHANNEL.1&#39;</span><span class="p">,</span> <span class="s1">&#39;192.168.1.121(1434)&#39;</span><span class="p">)</span>
+
+<span class="n">getq</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">Queue</span><span class="p">(</span><span class="n">qmgr</span><span class="p">,</span> <span class="s1">&#39;TESTQ.1&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Here is the message:&#39;</span><span class="p">,</span> <span class="n">getq</span><span class="o">.</span><span class="n">get</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<ul>
+<li><p class="first">As a prerequisite, you first need to install an IBM MQ client in the system that PyMQI is about to be installed
+- it is a free library offered by IBM on top of which higher-level ones, such as PyMQI, can connect to queue managers.
+IBM MQ clients can be downloaded from IBM’s website.</p>
+</li>
+<li><p class="first">Use pip to install PyMQI itself:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ sudo pip install pymqi
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="the-backbone-of-ibm-mq-python-messaging">
+<h1>The backbone of IBM MQ Python messaging<a class="headerlink" href="#the-backbone-of-ibm-mq-python-messaging" title="Permalink to this headline">¶</a></h1>
+<p>PyMQI is a relatively low-level library that requires one to know IBM APIs fairly well.</p>
+<p>It serves, however, as the basis for IBM MQ support in
+<a class="reference external" href="https://zato.io/docs?pymqi">Zato</a>,
+which is an enterprise API platform and backend application server
+in Python that lets one connect to many technologies with little or no programming</p>
+<p>This includes IBM MQ queue managers and ability to seamlessly integrate with Java JMS systems.</p>
+<a class="reference internal image-reference" href="https://zato.io/support/pymqi/mqdef.png"><img alt="https://zato.io/support/pymqi/mqdef.png" src="https://zato.io/support/pymqi/mqdef.png" style="width: 55%;" /></a>
+<p>Check out this
+<a class="reference external" href="https://zato.io/blog/posts/websphere-mq-python-zato.html">blog post</a>
+for an introduction
+and visit <a class="reference external" href="https://zato.io/docs?pymqi">Zato documentation</a> for more information.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+
+<style type="text/css">
+hr {
+  position: relative;
+  padding: 0;
+  margin: 8px auto;
+  border: none;
+  border-top: 1px solid #666666;
+  border-bottom: 1px solid #aaaaaa;
+  font-size: 1px;
+  line-height: 0;
+  overflow: visible;
+  width:85%
+}
+
+img {
+  vertical-align:middle
+}
+
+</style>
+
+<ul>
+    <li><img src="_static/rss-icon.png" alt="RSS icon" />&nbsp;<a href="https://zato.io/blog" title="Author's blog">Blog</a></li>
+    <li><img src="_static/twitter.png" alt="Twitter icon" />&nbsp;<a href="https://twitter.com/zatosource" title="Author on Twitter">Twitter</a></li>
+    <li><img src="_static/linkedin.png" alt="LinkedIn icon" />&nbsp;<a href="http://www.linkedin.com/groups?gid=3726448" title="Project's LinkedIn group">LinkedIn</a></li>
+</ul>
+
+<hr/>
+
+
+
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">PyMQI</a></li>
+<li><a class="reference internal" href="#introduction">Introduction</a></li>
+<li><a class="reference internal" href="#installation">Installation</a></li>
+<li><a class="reference internal" href="#the-backbone-of-ibm-mq-python-messaging">The backbone of IBM MQ Python messaging</a></li>
+</ul>
+
+
+  <h4>Next topic</h4>
+  <p class="topless"><a href="support.html"
+                        title="next chapter">Support, consulting and contact</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/index.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="support.html" title="Support, consulting and contact"
+             >next</a> |</li>
+        <li class="nav-item nav-item-0"><a href="#">PyMQI latest documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright Zato Source s.r.o..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+    </div>
+  </body>
+</html>

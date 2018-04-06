@@ -1,0 +1,1292 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Examples &#8212; PyMQI latest documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     'latest',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Support, consulting and contact" href="support.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="support.html" title="Support, consulting and contact"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyMQI latest documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="examples">
+<h1>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Sponsored by <a class="reference external" href="https://zato.io/docs?pymqi">Zato</a> - Open-Source ESB, SOA, REST, APIs and Cloud Integrations in Python</p>
+</div>
+<p>The purpose of this section is to gather code showing PyMQI in action or code
+that’s related to common IBM MQ-related tasks in general. Some of the
+examples are Python ports of IBM’s examples that IBM MQ ships with.</p>
+<p>The samples are self-contained and ready to use in your own PyMQI applications.
+Don’t hesitate to <a class="reference internal" href="support.html"><span class="doc">send a question</span></a>
+if you’d like to see any specific example be added. Thanks!</p>
+<div class="section" id="connecting-in-client-mode">
+<h2>Connecting in client mode<a class="headerlink" href="#connecting-in-client-mode" title="Permalink to this headline">¶</a></h2>
+<p>Code:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pymqi</span>
+
+<span class="n">queue_manager</span> <span class="o">=</span> <span class="s2">&quot;QM01&quot;</span>
+<span class="n">channel</span> <span class="o">=</span> <span class="s2">&quot;SVRCONN.1&quot;</span>
+<span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;192.168.1.135&quot;</span>
+<span class="n">port</span> <span class="o">=</span> <span class="s2">&quot;1434&quot;</span>
+<span class="n">conn_info</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">(</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+
+<span class="n">qmgr</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">queue_manager</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">conn_info</span><span class="p">)</span>
+<span class="n">qmgr</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="connecting-in-client-mode-with-username-password-credentials">
+<h2>Connecting in client mode with username/password credentials<a class="headerlink" href="#connecting-in-client-mode-with-username-password-credentials" title="Permalink to this headline">¶</a></h2>
+<p>Code:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pymqi</span>
+
+<span class="n">queue_manager</span> <span class="o">=</span> <span class="s2">&quot;QM01&quot;</span>
+<span class="n">channel</span> <span class="o">=</span> <span class="s2">&quot;SVRCONN.1&quot;</span>
+<span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;192.168.1.135&quot;</span>
+<span class="n">port</span> <span class="o">=</span> <span class="s2">&quot;1434&quot;</span>
+<span class="n">conn_info</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">(</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+
+<span class="n">user</span> <span class="o">=</span> <span class="s1">&#39;myuser&#39;</span>
+<span class="n">password</span> <span class="o">=</span> <span class="s1">&#39;mypassword&#39;</span>
+
+<span class="n">qmgr</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">queue_manager</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">conn_info</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
+<span class="n">qmgr</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Notes:</p>
+<ul class="simple">
+<li>Connecting with username/password credentials was added in PyMQI 1.5</li>
+<li>The functionality requires IBM MQ 8.0+ queue managers</li>
+</ul>
+</div>
+<div class="section" id="connecting-in-bindings-mode">
+<h2>Connecting in bindings mode<a class="headerlink" href="#connecting-in-bindings-mode" title="Permalink to this headline">¶</a></h2>
+<p>Code:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pymqi</span>
+
+<span class="n">queue_manager</span> <span class="o">=</span> <span class="s2">&quot;QM01&quot;</span>
+<span class="n">qmgr</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">queue_manager</span><span class="p">)</span>
+
+<span class="n">qmgr</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="how-to-put-the-message-on-a-queue">
+<h2>How to put the message on a queue<a class="headerlink" href="#how-to-put-the-message-on-a-queue" title="Permalink to this headline">¶</a></h2>
+<p>Code:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pymqi</span>
+
+<span class="n">queue_manager</span> <span class="o">=</span> <span class="s2">&quot;QM01&quot;</span>
+<span class="n">channel</span> <span class="o">=</span> <span class="s2">&quot;SVRCONN.1&quot;</span>
+<span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;192.168.1.135&quot;</span>
+<span class="n">port</span> <span class="o">=</span> <span class="s2">&quot;1434&quot;</span>
+<span class="n">queue_name</span> <span class="o">=</span> <span class="s2">&quot;TEST.1&quot;</span>
+<span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;Hello from Python!&quot;</span>
+<span class="n">conn_info</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">(</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+
+<span class="n">qmgr</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">queue_manager</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">conn_info</span><span class="p">)</span>
+
+<span class="n">queue</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">Queue</span><span class="p">(</span><span class="n">qmgr</span><span class="p">,</span> <span class="n">queue_name</span><span class="p">)</span>
+<span class="n">queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+<span class="n">queue</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="n">qmgr</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="how-to-get-the-message-off-a-queue">
+<h2>How to get the message off a queue<a class="headerlink" href="#how-to-get-the-message-off-a-queue" title="Permalink to this headline">¶</a></h2>
+<p>Code:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pymqi</span>
+
+<span class="n">queue_manager</span> <span class="o">=</span> <span class="s2">&quot;QM01&quot;</span>
+<span class="n">channel</span> <span class="o">=</span> <span class="s2">&quot;SVRCONN.1&quot;</span>
+<span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;192.168.1.135&quot;</span>
+<span class="n">port</span> <span class="o">=</span> <span class="s2">&quot;1434&quot;</span>
+<span class="n">queue_name</span> <span class="o">=</span> <span class="s2">&quot;TEST.1&quot;</span>
+<span class="n">conn_info</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">(</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+
+<span class="n">qmgr</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">queue_manager</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">conn_info</span><span class="p">)</span>
+
+<span class="n">queue</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">Queue</span><span class="p">(</span><span class="n">qmgr</span><span class="p">,</span> <span class="n">queue_name</span><span class="p">)</span>
+<span class="n">message</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+<span class="n">queue</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="n">qmgr</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Notes:</p>
+<ul class="simple">
+<li>By default Queue.get will not use any timeout, if messages are not available
+immediately a pymqi.MQMIError will be raised with MQ reason code set to
+2033 MQRC_NO_MSG_AVAILABLE, see <a class="reference internal" href="#wait-single-message"><span class="std std-ref">here</span></a>
+and <a class="reference internal" href="#wait-multiple-messages"><span class="std std-ref">here</span></a> for info on how to wait for a single or multiple messages.</li>
+</ul>
+</div>
+<div class="section" id="how-to-wait-for-a-single-message">
+<span id="wait-single-message"></span><h2>How to wait for a single message<a class="headerlink" href="#how-to-wait-for-a-single-message" title="Permalink to this headline">¶</a></h2>
+<p>Code:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pymqi</span>
+
+<span class="n">queue_manager</span> <span class="o">=</span> <span class="s2">&quot;QM01&quot;</span>
+<span class="n">channel</span> <span class="o">=</span> <span class="s2">&quot;SVRCONN.1&quot;</span>
+<span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;192.168.1.135&quot;</span>
+<span class="n">port</span> <span class="o">=</span> <span class="s2">&quot;1434&quot;</span>
+<span class="n">queue_name</span> <span class="o">=</span> <span class="s2">&quot;TEST.1&quot;</span>
+<span class="n">conn_info</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">(</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+
+<span class="c1"># Message Descriptor</span>
+<span class="n">md</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">MD</span><span class="p">()</span>
+
+<span class="c1"># Get Message Options</span>
+<span class="n">gmo</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">GMO</span><span class="p">()</span>
+<span class="n">gmo</span><span class="o">.</span><span class="n">Options</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQGMO_WAIT</span> <span class="o">|</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQGMO_FAIL_IF_QUIESCING</span>
+<span class="n">gmo</span><span class="o">.</span><span class="n">WaitInterval</span> <span class="o">=</span> <span class="mi">5000</span> <span class="c1"># 5 seconds</span>
+
+<span class="n">qmgr</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">queue_manager</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">conn_info</span><span class="p">)</span>
+
+<span class="n">queue</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">Queue</span><span class="p">(</span><span class="n">qmgr</span><span class="p">,</span> <span class="n">queue_name</span><span class="p">)</span>
+<span class="n">message</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">md</span><span class="p">,</span> <span class="n">gmo</span><span class="p">)</span>
+<span class="n">queue</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="n">qmgr</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Notes:</p>
+<ul class="simple">
+<li>If not told otherwise, Queue.get builds up a default Message Descriptor (MD) and
+Get Message Options (GMO), however in this case one needs to specify custom
+GMO in order to tell MQ to wait for messages for a given time. A default MD
+still needs to be passed to Queue.get,</li>
+<li>It is a recommended MQ programming practice to always use MQGMO_FAIL_IF_QUIESCING -
+PyMQI uses it by default unless it’s overridden.</li>
+</ul>
+</div>
+<div class="section" id="how-to-wait-for-multiple-messages">
+<span id="wait-multiple-messages"></span><h2>How to wait for multiple messages<a class="headerlink" href="#how-to-wait-for-multiple-messages" title="Permalink to this headline">¶</a></h2>
+<p>Code:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pymqi</span>
+
+<span class="n">queue_manager</span> <span class="o">=</span> <span class="s2">&quot;QM01&quot;</span>
+<span class="n">channel</span> <span class="o">=</span> <span class="s2">&quot;SVRCONN.1&quot;</span>
+<span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;192.168.1.135&quot;</span>
+<span class="n">port</span> <span class="o">=</span> <span class="s2">&quot;1434&quot;</span>
+<span class="n">queue_name</span> <span class="o">=</span> <span class="s2">&quot;TEST.1&quot;</span>
+<span class="n">conn_info</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">(</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+
+<span class="c1"># Message Descriptor</span>
+<span class="n">md</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">MD</span><span class="p">()</span>
+
+<span class="c1"># Get Message Options</span>
+<span class="n">gmo</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">GMO</span><span class="p">()</span>
+<span class="n">gmo</span><span class="o">.</span><span class="n">Options</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQGMO_WAIT</span> <span class="o">|</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQGMO_FAIL_IF_QUIESCING</span>
+<span class="n">gmo</span><span class="o">.</span><span class="n">WaitInterval</span> <span class="o">=</span> <span class="mi">5000</span> <span class="c1"># 5 seconds</span>
+
+<span class="n">qmgr</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">queue_manager</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">conn_info</span><span class="p">)</span>
+<span class="n">queue</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">Queue</span><span class="p">(</span><span class="n">qmgr</span><span class="p">,</span> <span class="n">queue_name</span><span class="p">)</span>
+
+<span class="n">keep_running</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="k">while</span> <span class="n">keep_running</span><span class="p">:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Wait up to to gmo.WaitInterval for a new message.</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">md</span><span class="p">,</span> <span class="n">gmo</span><span class="p">)</span>
+
+        <span class="c1"># Process the message here..</span>
+
+        <span class="c1"># Reset the MsgId, CorrelId &amp; GroupId so that we can reuse</span>
+        <span class="c1"># the same &#39;md&#39; object again.</span>
+        <span class="n">md</span><span class="o">.</span><span class="n">MsgId</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQMI_NONE</span>
+        <span class="n">md</span><span class="o">.</span><span class="n">CorrelId</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQCI_NONE</span>
+        <span class="n">md</span><span class="o">.</span><span class="n">GroupId</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQGI_NONE</span>
+
+    <span class="k">except</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">MQMIError</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">comp</span> <span class="o">==</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQCC_FAILED</span> <span class="ow">and</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span> <span class="o">==</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQRC_NO_MSG_AVAILABLE</span><span class="p">:</span>
+            <span class="c1"># No messages, that&#39;s OK, we can ignore it.</span>
+            <span class="k">pass</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Some other error condition.</span>
+            <span class="k">raise</span>
+
+<span class="n">queue</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="n">qmgr</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Notes:</p>
+<ul class="simple">
+<li>The key part is a GIL-releasing non-busy loop which consumes almost no CPU and runs very
+close to raw C speed. On modern-day hardware, such a programming pattern can
+be used to easily achieve a throughput of thousands of messages a second,</li>
+<li>Again, using pymqi.CMQC.MQGMO_FAIL_IF_QUIESCING is a recommended programming practice.</li>
+</ul>
+</div>
+<div class="section" id="how-to-specify-dynamic-reply-to-queues">
+<h2>How to specify dynamic reply-to queues<a class="headerlink" href="#how-to-specify-dynamic-reply-to-queues" title="Permalink to this headline">¶</a></h2>
+<p>Code:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pymqi</span>
+
+<span class="n">queue_manager</span> <span class="o">=</span> <span class="s2">&quot;QM01&quot;</span>
+<span class="n">channel</span> <span class="o">=</span> <span class="s2">&quot;SVRCONN.1&quot;</span>
+<span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;192.168.1.135&quot;</span>
+<span class="n">port</span> <span class="o">=</span> <span class="s2">&quot;1434&quot;</span>
+<span class="n">conn_info</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">(</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+<span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;Please reply to a dynamic queue, thanks.&quot;</span>
+<span class="n">dynamic_queue_prefix</span> <span class="o">=</span> <span class="s2">&quot;MY.REPLIES.*&quot;</span>
+<span class="n">request_queue</span> <span class="o">=</span> <span class="s2">&quot;TEST.1&quot;</span>
+
+<span class="n">qmgr</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">queue_manager</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">conn_info</span><span class="p">)</span>
+
+<span class="c1"># Dynamic queue&#39;s object descriptor.</span>
+<span class="n">dyn_od</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">OD</span><span class="p">()</span>
+<span class="n">dyn_od</span><span class="o">.</span><span class="n">ObjectName</span> <span class="o">=</span> <span class="s2">&quot;SYSTEM.DEFAULT.MODEL.QUEUE&quot;</span>
+<span class="n">dyn_od</span><span class="o">.</span><span class="n">DynamicQName</span> <span class="o">=</span> <span class="n">dynamic_queue_prefix</span>
+
+<span class="c1"># Open the dynamic queue.</span>
+<span class="n">dyn_input_open_options</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQOO_INPUT_EXCLUSIVE</span>
+<span class="n">dyn_queue</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">Queue</span><span class="p">(</span><span class="n">qmgr</span><span class="p">,</span> <span class="n">dyn_od</span><span class="p">,</span> <span class="n">dyn_input_open_options</span><span class="p">)</span>
+<span class="n">dyn_queue_name</span> <span class="o">=</span> <span class="n">dyn_od</span><span class="o">.</span><span class="n">ObjectName</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+<span class="c1"># Prepare a Message Descriptor for the request message.</span>
+<span class="n">md</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">MD</span><span class="p">()</span>
+<span class="n">md</span><span class="o">.</span><span class="n">ReplyToQ</span> <span class="o">=</span> <span class="n">dyn_queue_name</span>
+
+<span class="c1"># Send the message.</span>
+<span class="n">queue</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">Queue</span><span class="p">(</span><span class="n">qmgr</span><span class="p">,</span> <span class="n">request_queue</span><span class="p">)</span>
+<span class="n">queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">md</span><span class="p">)</span>
+
+<span class="c1"># Get and process the response here..</span>
+
+<span class="n">dyn_queue</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="n">queue</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="n">qmgr</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Notes:</p>
+<ul class="simple">
+<li>To specify a dynamic reply-to queue, one needs to first create an appropriate
+Object Descriptor and then open the queue, the descriptor’s <em>DynamicQName</em>
+attribute will be filled in by MQ to the name of a queue created,</li>
+<li>Queue.put accepts a message descriptor on input, its <em>ReplyToQ</em> attribute is
+responsible for storing information about where the responding side should
+send the messages to.</li>
+</ul>
+</div>
+<div class="section" id="how-to-send-responses-to-reply-to-queues">
+<h2>How to send responses to reply-to queues<a class="headerlink" href="#how-to-send-responses-to-reply-to-queues" title="Permalink to this headline">¶</a></h2>
+<p>Code:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pymqi</span>
+
+<span class="n">queue_manager</span> <span class="o">=</span> <span class="s2">&quot;QM01&quot;</span>
+<span class="n">channel</span> <span class="o">=</span> <span class="s2">&quot;SVRCONN.1&quot;</span>
+<span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;192.168.1.135&quot;</span>
+<span class="n">port</span> <span class="o">=</span> <span class="s2">&quot;1434&quot;</span>
+<span class="n">queue_name</span> <span class="o">=</span> <span class="s2">&quot;TEST.1&quot;</span>
+<span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;Here&#39;s a reply&quot;</span>
+<span class="n">conn_info</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">(</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+
+<span class="n">qmgr</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">queue_manager</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">conn_info</span><span class="p">)</span>
+
+<span class="n">md</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">MD</span><span class="p">()</span>
+
+<span class="n">queue</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">Queue</span><span class="p">(</span><span class="n">qmgr</span><span class="p">,</span> <span class="n">queue_name</span><span class="p">)</span>
+<span class="n">message</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">md</span><span class="p">)</span>
+
+<span class="n">reply_to_queue_name</span> <span class="o">=</span> <span class="n">md</span><span class="o">.</span><span class="n">ReplyToQ</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+<span class="n">reply_to_queue</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">Queue</span><span class="p">(</span><span class="n">qmgr</span><span class="p">,</span> <span class="n">reply_to_queue_name</span><span class="p">)</span>
+<span class="n">reply_to_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+<span class="n">queue</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="n">qmgr</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Notes:</p>
+<ul class="simple">
+<li>Queue.get accepts an input message descriptor parameter, its <em>ReplyToQ</em> attribute is
+responsible for storing information about where the responding side should
+send the messages to. The attribute’s value is filled in by IBM MQ.</li>
+</ul>
+</div>
+<div class="section" id="how-to-publish-messages-on-topics">
+<h2>How to publish messages on topics<a class="headerlink" href="#how-to-publish-messages-on-topics" title="Permalink to this headline">¶</a></h2>
+<p>Code:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pymqi</span>
+
+<span class="n">queue_manager</span> <span class="o">=</span> <span class="s2">&quot;QM01&quot;</span>
+<span class="n">channel</span> <span class="o">=</span> <span class="s2">&quot;SVRCONN.1&quot;</span>
+<span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;192.168.1.135&quot;</span>
+<span class="n">port</span> <span class="o">=</span> <span class="s2">&quot;1434&quot;</span>
+<span class="n">topic_string</span> <span class="o">=</span> <span class="s2">&quot;/currency/rate/EUR/USD&quot;</span>
+<span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;1.3961&quot;</span>
+<span class="n">conn_info</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">(</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+
+<span class="n">qmgr</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">QueueManager</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">qmgr</span><span class="o">.</span><span class="n">connect_tcp_client</span><span class="p">(</span><span class="n">queue_manager</span><span class="p">,</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CD</span><span class="p">(),</span> <span class="n">channel</span><span class="p">,</span> <span class="n">conn_info</span><span class="p">)</span>
+
+<span class="n">topic</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">Topic</span><span class="p">(</span><span class="n">qmgr</span><span class="p">,</span> <span class="n">topic_string</span><span class="o">=</span><span class="n">topic_string</span><span class="p">)</span>
+<span class="n">topic</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">open_opts</span><span class="o">=</span><span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQOO_OUTPUT</span><span class="p">)</span>
+<span class="n">topic</span><span class="o">.</span><span class="n">pub</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+<span class="n">topic</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="n">qmgr</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Notes:</p>
+<ul class="simple">
+<li>pymqi.Topic is a class through which all operations related to MQ topics are
+made,</li>
+<li>a Topic object may be open just like if it were a regular queue,</li>
+<li>once a topic is open, its <em>.pub</em> method may be used for publishing the messages.</li>
+</ul>
+</div>
+<div class="section" id="how-to-subscribe-to-topics-and-avoid-mqrc-sub-already-exists-at-the-same-time">
+<h2>How to subscribe to topics (and avoid MQRC_SUB_ALREADY_EXISTS at the same time)<a class="headerlink" href="#how-to-subscribe-to-topics-and-avoid-mqrc-sub-already-exists-at-the-same-time" title="Permalink to this headline">¶</a></h2>
+<p>Code:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">import</span> <span class="nn">pymqi</span>
+
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+
+<span class="n">queue_manager</span> <span class="o">=</span> <span class="s2">&quot;QM01&quot;</span>
+<span class="n">channel</span> <span class="o">=</span> <span class="s2">&quot;SVRCONN.1&quot;</span>
+<span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;192.168.1.135&quot;</span>
+<span class="n">port</span> <span class="o">=</span> <span class="s2">&quot;1434&quot;</span>
+<span class="n">topic_string</span> <span class="o">=</span> <span class="s2">&quot;/currency/rate/EUR/USD&quot;</span>
+<span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;1.3961&quot;</span>
+<span class="n">conn_info</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">(</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+
+<span class="n">qmgr</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">QueueManager</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">qmgr</span><span class="o">.</span><span class="n">connect_tcp_client</span><span class="p">(</span><span class="n">queue_manager</span><span class="p">,</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CD</span><span class="p">(),</span> <span class="n">channel</span><span class="p">,</span> <span class="n">conn_info</span><span class="p">)</span>
+
+<span class="n">sub_desc</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">SD</span><span class="p">()</span>
+<span class="n">sub_desc</span><span class="p">[</span><span class="s2">&quot;Options&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQSO_CREATE</span> <span class="o">+</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQSO_RESUME</span> <span class="o">+</span> \
+    <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQSO_DURABLE</span> <span class="o">+</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQSO_MANAGED</span>
+<span class="n">sub_desc</span><span class="o">.</span><span class="n">set_vs</span><span class="p">(</span><span class="s2">&quot;SubName&quot;</span><span class="p">,</span> <span class="s2">&quot;MySub&quot;</span><span class="p">)</span>
+<span class="n">sub_desc</span><span class="o">.</span><span class="n">set_vs</span><span class="p">(</span><span class="s2">&quot;ObjectString&quot;</span><span class="p">,</span> <span class="n">topic_string</span><span class="p">)</span>
+
+<span class="n">sub</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">Subscription</span><span class="p">(</span><span class="n">qmgr</span><span class="p">)</span>
+<span class="n">sub</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">sub_desc</span><span class="o">=</span><span class="n">sub_desc</span><span class="p">)</span>
+
+<span class="n">get_opts</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">GMO</span><span class="p">(</span>
+    <span class="n">Options</span><span class="o">=</span><span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQGMO_NO_SYNCPOINT</span> <span class="o">+</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQGMO_FAIL_IF_QUIESCING</span> <span class="o">+</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQGMO_WAIT</span><span class="p">)</span>
+<span class="n">get_opts</span><span class="p">[</span><span class="s2">&quot;WaitInterval&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">15000</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="n">sub</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">md</span><span class="p">(),</span> <span class="n">get_opts</span><span class="p">)</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Here&#39;s the received data: [</span><span class="si">%s</span><span class="s2">]&quot;</span> <span class="o">%</span> <span class="n">data</span><span class="p">)</span>
+
+<span class="n">sub</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">sub_close_options</span><span class="o">=</span><span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQCO_KEEP_SUB</span><span class="p">,</span> <span class="n">close_sub_queue</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">qmgr</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Notes:</p>
+<ul class="simple">
+<li>A <em>pymqi.Subscription</em> and its companion class <em>pymqi.SD</em> (a Subscription Descriptor) are
+needed for subscribing to a topic,</li>
+<li>a proper pymqi.SD needs to be created first; note the usage of its <em>.set_vs</em> method
+for setting some of the object’s properties. It’s needed here because parts of
+the pymqi.SD’s implementation depend on <a class="reference external" href="http://docs.python.org/library/ctypes.html">ctypes</a>
+and cannot be set directly through the regular dictionary assignment like the “Options” have been set,</li>
+<li>note well that among other options we’re using pymqi.CMQC.MQSO_CREATE + pymqi.CMQC.MQSO_RESUME,
+in plain words in means <em>create a new subscription of the name set in the
+“SubName” key (“MySub” in the example) but if the subscribtion already exists
+then just resume it</em>, this basically means we won’t stumble upon the
+MQRC_SUB_ALREADY_EXISTS error code,</li>
+<li>once the pymqi.SD has been created, it can be used for subscribing to a particular
+topic with invoking the pymqi.Subscription’s <em>.sub</em> method,</li>
+<li>once subscribed to the topic, you can use the subscription’s <em>.get</em> method for
+receiving the messages. Note that the .get method uses regular Get Message Options
+(pymqi.GMO), just like if the subscription was an ordinary queue,</li>
+<li>before disconnecting from the queue manager, a subscription should be closed;
+note passing of the information regarding what MQ should do with the related objects.</li>
+</ul>
+</div>
+<div class="section" id="how-to-use-ssl-tls">
+<span id="ssl-tls"></span><h2>How to use SSL &amp; TLS<a class="headerlink" href="#how-to-use-ssl-tls" title="Permalink to this headline">¶</a></h2>
+<p>Code:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">import</span> <span class="nn">pymqi</span>
+
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+
+<span class="n">queue_manager</span> <span class="o">=</span> <span class="s2">&quot;QM01&quot;</span>
+<span class="n">channel</span> <span class="o">=</span> <span class="s2">&quot;SSL.SVRCONN.1&quot;</span>
+<span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;192.168.1.135&quot;</span>
+<span class="n">port</span> <span class="o">=</span> <span class="s2">&quot;1434&quot;</span>
+<span class="n">queue_name</span> <span class="o">=</span> <span class="s2">&quot;TEST.1&quot;</span>
+<span class="n">conn_info</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">(</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+<span class="n">ssl_cipher_spec</span> <span class="o">=</span> <span class="s2">&quot;TLS_RSA_WITH_AES_256_CBC_SHA&quot;</span>
+<span class="n">key_repo_location</span> <span class="o">=</span> <span class="s2">&quot;/var/mqm/ssl-db/client/KeyringClient&quot;</span>
+<span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;Hello from Python!&quot;</span>
+
+<span class="n">cd</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CD</span><span class="p">()</span>
+<span class="n">cd</span><span class="o">.</span><span class="n">ChannelName</span> <span class="o">=</span> <span class="n">channel</span>
+<span class="n">cd</span><span class="o">.</span><span class="n">ConnectionName</span> <span class="o">=</span> <span class="n">conn_info</span>
+<span class="n">cd</span><span class="o">.</span><span class="n">ChannelType</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQCHT_CLNTCONN</span>
+<span class="n">cd</span><span class="o">.</span><span class="n">TransportType</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQXPT_TCP</span>
+<span class="n">cd</span><span class="o">.</span><span class="n">SSLCipherSpec</span> <span class="o">=</span> <span class="n">ssl_cipher_spec</span>
+
+<span class="n">sco</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">SCO</span><span class="p">()</span>
+<span class="n">sco</span><span class="o">.</span><span class="n">KeyRepository</span> <span class="o">=</span> <span class="n">key_repo_location</span>
+
+<span class="n">qmgr</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">QueueManager</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">qmgr</span><span class="o">.</span><span class="n">connect_with_options</span><span class="p">(</span><span class="n">queue_manager</span><span class="p">,</span> <span class="n">cd</span><span class="p">,</span> <span class="n">sco</span><span class="p">)</span>
+
+<span class="n">put_queue</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">Queue</span><span class="p">(</span><span class="n">qmgr</span><span class="p">,</span> <span class="n">queue_name</span><span class="p">)</span>
+<span class="n">put_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+<span class="n">get_queue</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">Queue</span><span class="p">(</span><span class="n">qmgr</span><span class="p">,</span> <span class="n">queue_name</span><span class="p">)</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Here&#39;s the message again: [</span><span class="si">%s</span><span class="s2">]&quot;</span> <span class="o">%</span> <span class="n">get_queue</span><span class="o">.</span><span class="n">get</span><span class="p">())</span>
+
+<span class="n">put_queue</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="n">get_queue</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="n">qmgr</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Notes:</p>
+<ul class="simple">
+<li>When not using SSL or TLS, PyMQI creates a default <em>pymqi.CD</em> object however
+in this case one needs to pass specific SSL/TLS-related information manually
+using <em>pymqi.CD</em> and <em>pymqi.SCO</em> objects,</li>
+<li>Code above assumes that:</li>
+</ul>
+<blockquote>
+<div><ul>
+<li><p class="first">Queue manager has been assigned a key repository (SSLKEYR attribute) and
+the repository contains the client’s certificate,</p>
+</li>
+<li><p class="first">There is an SVRCONN channel with the following properties set:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">DIS</span> <span class="n">CHANNEL</span><span class="p">(</span><span class="n">SSL</span><span class="o">.</span><span class="n">SVRCONN</span><span class="o">.</span><span class="mi">1</span><span class="p">)</span> <span class="n">SSLCAUTH</span> <span class="n">SSLCIPH</span>
+     <span class="mi">1</span> <span class="p">:</span> <span class="n">DIS</span> <span class="n">CHANNEL</span><span class="p">(</span><span class="n">SSL</span><span class="o">.</span><span class="n">SVRCONN</span><span class="o">.</span><span class="mi">1</span><span class="p">)</span> <span class="n">SSLCAUTH</span> <span class="n">SSLCIPH</span>
+<span class="n">AMQ8414</span><span class="p">:</span> <span class="n">Display</span> <span class="n">Channel</span> <span class="n">details</span><span class="o">.</span>
+   <span class="n">CHANNEL</span><span class="p">(</span><span class="n">SSL</span><span class="o">.</span><span class="n">SVRCONN</span><span class="o">.</span><span class="mi">1</span><span class="p">)</span>                  <span class="n">CHLTYPE</span><span class="p">(</span><span class="n">SVRCONN</span><span class="p">)</span>
+   <span class="n">SSLCAUTH</span><span class="p">(</span><span class="n">REQUIRED</span><span class="p">)</span>
+   <span class="n">SSLCIPH</span><span class="p">(</span><span class="n">TLS_RSA_WITH_AES_256_CBC_SHA</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">You can access a client key database of type CMS - one, which can be created with gsk6cmd/gsk7cmd tools -
+and there are following files in the /var/mqm/ssl-db/client/ directory (the directory name may
+be arbitrary, /var/mqm/ssl-db/client/ is only an example):</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ ls -a /var/mqm/ssl-db/client/
+.  ..  KeyringClient.crl  KeyringClient.kdb  KeyringClient.rdb  KeyringClient.sth
+$
+</pre></div>
+</div>
+</li>
+<li><p class="first">The client key database contains a certificate labeled <em>ibmwebspheremqmy_user</em>
+and you are running the code as an operating system’s account <em>my_user</em>,</p>
+</li>
+<li><p class="first">The client key database contains the queue manager’s certificate.</p>
+</li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li>Remember to make sure that:</li>
+</ul>
+<blockquote>
+<div><ul class="simple">
+<li>The queue manager certificate’s label is prefixed with <em>ibmwebspheremq</em> and ends with
+the name of the queue manager, lowercased. If the name of a queue manager is
+QM01 then the label will be <em>ibmwebspheremqqm01</em>,</li>
+<li>The client certificate’s label is prefixed with <em>ibmwebspheremq</em> and ends with
+the name of the operating system’s account under which the code will be executed;
+so if the account name is <em>user01</em> then the label will be <em>ibmwebspheremquser01</em>,</li>
+<li>The value of a cd.SSLCipherSpec parameter matches the value of a channel’s
+SSLCIPH attribute.</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="how-to-set-and-get-the-message-priority">
+<h2>How to set and get the message priority<a class="headerlink" href="#how-to-set-and-get-the-message-priority" title="Permalink to this headline">¶</a></h2>
+<p>Code:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">import</span> <span class="nn">pymqi</span>
+
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+
+<span class="n">queue_manager</span> <span class="o">=</span> <span class="s2">&quot;QM01&quot;</span>
+<span class="n">channel</span> <span class="o">=</span> <span class="s2">&quot;SVRCONN.1&quot;</span>
+<span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;192.168.1.135&quot;</span>
+<span class="n">port</span> <span class="o">=</span> <span class="s2">&quot;1434&quot;</span>
+<span class="n">queue_name</span> <span class="o">=</span> <span class="s2">&quot;TEST.1&quot;</span>
+<span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;Hello from Python!&quot;</span>
+<span class="n">conn_info</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">(</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+<span class="n">priority</span> <span class="o">=</span> <span class="mi">2</span>
+
+<span class="n">put_md</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">MD</span><span class="p">()</span>
+<span class="n">put_md</span><span class="o">.</span><span class="n">Priority</span> <span class="o">=</span> <span class="n">priority</span>
+
+<span class="n">qmgr</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">queue_manager</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">conn_info</span><span class="p">)</span>
+
+<span class="n">put_queue</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">Queue</span><span class="p">(</span><span class="n">qmgr</span><span class="p">,</span> <span class="n">queue_name</span><span class="p">)</span>
+<span class="n">put_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">put_md</span><span class="p">)</span>
+
+<span class="n">get_md</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">MD</span><span class="p">()</span>
+<span class="n">get_queue</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">Queue</span><span class="p">(</span><span class="n">qmgr</span><span class="p">,</span> <span class="n">queue_name</span><span class="p">)</span>
+<span class="n">message_body</span> <span class="o">=</span> <span class="n">get_queue</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">get_md</span><span class="p">)</span>
+
+<span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Received a message, priority [</span><span class="si">%s</span><span class="s2">].&quot;</span> <span class="o">%</span> <span class="n">get_md</span><span class="o">.</span><span class="n">Priority</span><span class="p">)</span>
+
+<span class="n">put_queue</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="n">get_queue</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="n">qmgr</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Notes:</p>
+<ul class="simple">
+<li>Use custom <em>pymqi.MD</em> instances for both setting and reading the message priority.</li>
+</ul>
+</div>
+<div class="section" id="how-to-use-channel-compression">
+<h2>How to use channel compression<a class="headerlink" href="#how-to-use-channel-compression" title="Permalink to this headline">¶</a></h2>
+<p>Code:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pymqi</span>
+<span class="kn">import</span> <span class="nn">CMQXC</span>
+
+<span class="n">queue_manager</span> <span class="o">=</span> <span class="s2">&quot;QM01&quot;</span>
+<span class="n">channel</span> <span class="o">=</span> <span class="s2">&quot;SVRCONN.1&quot;</span>
+<span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;192.168.1.135&quot;</span>
+<span class="n">port</span> <span class="o">=</span> <span class="s2">&quot;1434&quot;</span>
+<span class="n">queue_name</span> <span class="o">=</span> <span class="s2">&quot;TEST.1&quot;</span>
+<span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;Hello from Python!&quot;</span> <span class="o">*</span> <span class="mi">10000</span>
+<span class="n">conn_info</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">(</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+
+<span class="n">cd</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CD</span><span class="p">()</span>
+<span class="n">cd</span><span class="o">.</span><span class="n">MsgCompList</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">CMQXC</span><span class="o">.</span><span class="n">MQCOMPRESS_ZLIBHIGH</span>
+
+<span class="n">qmgr</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">queue_manager</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">conn_info</span><span class="p">)</span>
+
+<span class="n">queue</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">Queue</span><span class="p">(</span><span class="n">qmgr</span><span class="p">,</span> <span class="n">queue_name</span><span class="p">)</span>
+<span class="n">queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+<span class="n">queue</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="n">qmgr</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Notes:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Note that the compression level to use is the second element
+of the cd.MsgCompList list, not the first one,</li>
+<li>The above assumes the channel’s been configured using the following
+MQSC command: <em>ALTER CHANNEL(SVRCONN.1) CHLTYPE(SVRCONN) COMPMSG(ZLIBHIGH)</em></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="how-to-check-completion-and-reason-codes">
+<h2>How to check completion- and reason codes<a class="headerlink" href="#how-to-check-completion-and-reason-codes" title="Permalink to this headline">¶</a></h2>
+<p>Code:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">import</span> <span class="nn">pymqi</span>
+
+<span class="n">queue_manager</span> <span class="o">=</span> <span class="s2">&quot;QM01&quot;</span>
+<span class="n">channel</span> <span class="o">=</span> <span class="s2">&quot;SVRCONN.1&quot;</span>
+<span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;foo.bar&quot;</span> <span class="c1"># Note the made up host name</span>
+<span class="n">port</span> <span class="o">=</span> <span class="s2">&quot;1434&quot;</span>
+<span class="n">conn_info</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">(</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">qmgr</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">queue_manager</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">conn_info</span><span class="p">)</span>
+<span class="k">except</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">MQMIError</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">comp</span> <span class="o">==</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQCC_FAILED</span> <span class="ow">and</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span> <span class="o">==</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQRC_HOST_NOT_AVAILABLE</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Such a host [</span><span class="si">%s</span><span class="s2">] does not exist.&quot;</span> <span class="o">%</span> <span class="n">host</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Notes:</p>
+<ul class="simple">
+<li>When IBM MQ raises an exception, it is wrapped in a pymqi.MQMIError
+object which exposes 2 useful attributes: <em>.comp</em> is a completion code
+and <em>.reason</em> is the reason code assigned by MQ. All the completion- and
+reason codes can be looked up in the <em>pymqi.CMQC</em> module.</li>
+</ul>
+</div>
+<div class="section" id="how-to-check-the-versions-of-ibm-mq-packages-installed-linux">
+<h2>How to check the versions of IBM MQ packages installed, Linux<a class="headerlink" href="#how-to-check-the-versions-of-ibm-mq-packages-installed-linux" title="Permalink to this headline">¶</a></h2>
+<p>Code:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">import</span> <span class="nn">rpm</span>
+
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+
+<span class="n">package_name</span> <span class="o">=</span> <span class="s2">&quot;MQSeriesClient&quot;</span>
+
+<span class="n">ts</span> <span class="o">=</span> <span class="n">rpm</span><span class="o">.</span><span class="n">TransactionSet</span><span class="p">()</span>
+<span class="n">mi</span> <span class="o">=</span> <span class="n">ts</span><span class="o">.</span><span class="n">dbMatch</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="n">package_name</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">mi</span><span class="o">.</span><span class="n">count</span><span class="p">():</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Did not find package [</span><span class="si">%s</span><span class="s2">] in RPM database.&quot;</span> <span class="o">%</span> <span class="n">package_name</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">header</span> <span class="ow">in</span> <span class="n">mi</span><span class="p">:</span>
+        <span class="n">version</span> <span class="o">=</span> <span class="n">header</span><span class="p">[</span><span class="s2">&quot;version&quot;</span><span class="p">]</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Found package [</span><span class="si">%s</span><span class="s2">], version [</span><span class="si">%s</span><span class="s2">].&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">package_name</span><span class="p">,</span> <span class="n">version</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Notes:</p>
+<ul class="simple">
+<li>IBM MQ packages for Linux are distributed as RPMs and we can query the
+RPM database for information about what’s been installed,</li>
+<li>PyMQI hasn’t been used in the example, however the task is related to MQ
+administration and that’s why it’s been shown here.</li>
+</ul>
+</div>
+<div class="section" id="how-to-check-the-versions-of-ibm-mq-packages-installed-windows">
+<h2>How to check the versions of IBM MQ packages installed, Windows<a class="headerlink" href="#how-to-check-the-versions-of-ibm-mq-packages-installed-windows" title="Permalink to this headline">¶</a></h2>
+<p>Code:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">_winreg</span>
+
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+
+<span class="n">key_name</span> <span class="o">=</span> <span class="s2">&quot;Software</span><span class="se">\\</span><span class="s2">IBM</span><span class="se">\\</span><span class="s2">MQSeries</span><span class="se">\\</span><span class="s2">CurrentVersion&quot;</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="n">_winreg</span><span class="o">.</span><span class="n">OpenKey</span><span class="p">(</span><span class="n">_winreg</span><span class="o">.</span><span class="n">HKEY_LOCAL_MACHINE</span><span class="p">,</span> <span class="n">key_name</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">WindowsError</span><span class="p">:</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Could not find IBM MQ-related information in Windows registry.&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">version</span> <span class="o">=</span> <span class="n">_winreg</span><span class="o">.</span><span class="n">QueryValueEx</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="s2">&quot;VRMF&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;IBM MQ version is [</span><span class="si">%s</span><span class="s2">].&quot;</span> <span class="o">%</span> <span class="n">version</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>Versions of IBM MQ packages installed under Windows can be extracted
+by querying the Windows registry,</li>
+<li>Again, PyMQI hasn’t been used in the example, however the task is related to MQ
+administration and that’s why it’s been shown here.</li>
+</ul>
+</div>
+<div class="section" id="how-to-use-an-alternate-user-id">
+<h2>How to use an alternate user ID<a class="headerlink" href="#how-to-use-an-alternate-user-id" title="Permalink to this headline">¶</a></h2>
+<p>Code:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pymqi</span>
+
+<span class="n">queue_manager</span> <span class="o">=</span> <span class="s2">&quot;QM01&quot;</span>
+<span class="n">channel</span> <span class="o">=</span> <span class="s2">&quot;SVRCONN.1&quot;</span>
+<span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;192.168.1.135&quot;</span>
+<span class="n">port</span> <span class="o">=</span> <span class="s2">&quot;1434&quot;</span>
+<span class="n">queue_name</span> <span class="o">=</span> <span class="s2">&quot;TEST.1&quot;</span>
+<span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;Hello from Python!&quot;</span>
+<span class="n">alternate_user_id</span> <span class="o">=</span> <span class="s2">&quot;myuser&quot;</span>
+<span class="n">conn_info</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">(</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+
+<span class="n">qmgr</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">queue_manager</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">conn_info</span><span class="p">)</span>
+
+<span class="n">od</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">OD</span><span class="p">()</span>
+<span class="n">od</span><span class="o">.</span><span class="n">ObjectName</span> <span class="o">=</span> <span class="n">queue_name</span>
+<span class="n">od</span><span class="o">.</span><span class="n">AlternateUserId</span> <span class="o">=</span> <span class="n">alternate_user_id</span>
+
+<span class="n">queue</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">Queue</span><span class="p">(</span><span class="n">qmgr</span><span class="p">)</span>
+<span class="n">queue</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">od</span><span class="p">,</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQOO_OUTPUT</span> <span class="o">|</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQOO_ALTERNATE_USER_AUTHORITY</span><span class="p">)</span>
+<span class="n">queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+<span class="n">queue</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="n">qmgr</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Notes:</p>
+<ul class="simple">
+<li>Queue.open accepts an object descriptor (an instance of pymqi.OD class) and
+queue open options, both of which are used here to specify the alternate user ID.</li>
+</ul>
+</div>
+<div class="section" id="how-to-correlate-request-and-response-messages-using-correlationid">
+<h2>How to correlate request and response messages using CorrelationId<a class="headerlink" href="#how-to-correlate-request-and-response-messages-using-correlationid" title="Permalink to this headline">¶</a></h2>
+<p>(contributed by <a class="reference external" href="https://launchpad.net/~johannes-wagener">Hannes Wagener</a>)</p>
+<p>Code:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># stdlib</span>
+<span class="kn">import</span> <span class="nn">logging</span><span class="o">,</span> <span class="nn">threading</span><span class="o">,</span> <span class="nn">time</span><span class="o">,</span> <span class="nn">traceback</span><span class="o">,</span> <span class="nn">uuid</span>
+
+<span class="c1"># PyMQI</span>
+<span class="kn">import</span> <span class="nn">pymqi</span>
+
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+
+<span class="c1"># Queue manager name</span>
+<span class="n">qm_name</span> <span class="o">=</span> <span class="s2">&quot;QM01&quot;</span>
+
+<span class="c1"># Listener host and port</span>
+<span class="n">listener</span> <span class="o">=</span> <span class="s2">&quot;192.168.1.135(1434)&quot;</span>
+
+<span class="c1"># Channel to transfer data through</span>
+<span class="n">channel</span> <span class="o">=</span> <span class="s2">&quot;SVRCONN.1&quot;</span>
+
+<span class="c1"># Request Queue</span>
+<span class="n">request_queue_name</span> <span class="o">=</span> <span class="s2">&quot;REQUEST.QUEUE.1&quot;</span>
+
+<span class="c1"># ReplyTo Queue</span>
+<span class="n">replyto_queue_name</span> <span class="o">=</span> <span class="s2">&quot;REPLYTO.QUEUE.1&quot;</span>
+
+<span class="n">message_prefix</span> <span class="o">=</span> <span class="s2">&quot;Test Data. &quot;</span>
+
+<span class="k">class</span> <span class="nc">Producer</span><span class="p">(</span><span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; A base class for any producer used in this example.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">daemon</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="n">cd</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CD</span><span class="p">()</span>
+        <span class="n">cd</span><span class="o">.</span><span class="n">ChannelName</span> <span class="o">=</span> <span class="n">channel</span>
+        <span class="n">cd</span><span class="o">.</span><span class="n">ConnectionName</span> <span class="o">=</span> <span class="n">listener</span>
+        <span class="n">cd</span><span class="o">.</span><span class="n">ChannelType</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQCHT_CLNTCONN</span>
+        <span class="n">cd</span><span class="o">.</span><span class="n">TransportType</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQXPT_TCP</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">qm</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">QueueManager</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">qm</span><span class="o">.</span><span class="n">connect_with_options</span><span class="p">(</span>
+            <span class="n">qm_name</span><span class="p">,</span> <span class="n">opts</span><span class="o">=</span><span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQCNO_HANDLE_SHARE_NO_BLOCK</span><span class="p">,</span> <span class="n">cd</span><span class="o">=</span><span class="n">cd</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">req_queue</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">Queue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">qm</span><span class="p">,</span> <span class="n">request_queue_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">replyto_queue</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">Queue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">qm</span><span class="p">,</span> <span class="n">replyto_queue_name</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">RequestProducer</span><span class="p">(</span><span class="n">Producer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Instances of this class produce an infinite stream of request messages</span>
+<span class="sd">    and wait for appropriate responses on reply-to queues.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="c1"># Put the request message.</span>
+            <span class="n">put_mqmd</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">MD</span><span class="p">()</span>
+
+            <span class="c1"># Set the MsgType to request.</span>
+            <span class="n">put_mqmd</span><span class="p">[</span><span class="s2">&quot;MsgType&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQMT_REQUEST</span>
+
+            <span class="c1"># Set up the ReplyTo QUeue/Queue Manager (Queue Manager is automatically</span>
+            <span class="c1"># set by MQ).</span>
+
+            <span class="n">put_mqmd</span><span class="p">[</span><span class="s2">&quot;ReplyToQ&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">replyto_queue_name</span>
+            <span class="n">put_mqmd</span><span class="p">[</span><span class="s2">&quot;ReplyToQMgr&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">qm_name</span>
+
+            <span class="c1"># Set up the put options - must do with NO_SYNCPOINT so that the request</span>
+            <span class="c1"># message is committed immediately.</span>
+            <span class="n">put_opts</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">PMO</span><span class="p">(</span><span class="n">Options</span><span class="o">=</span><span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQPMO_NO_SYNCPOINT</span> <span class="o">+</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQPMO_FAIL_IF_QUIESCING</span><span class="p">)</span>
+
+            <span class="c1"># Create a random message.</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="n">message_prefix</span> <span class="o">+</span> <span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">req_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">put_mqmd</span><span class="p">,</span> <span class="n">put_opts</span><span class="p">)</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Put request message.  Message: [</span><span class="si">%s</span><span class="s2">]&quot;</span> <span class="o">%</span> <span class="n">message</span><span class="p">)</span>
+
+            <span class="c1"># Set up message descriptor for get.</span>
+            <span class="n">get_mqmd</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">MD</span><span class="p">()</span>
+
+            <span class="c1"># Set the get CorrelId to the put MsgId (which was set by MQ on the put1).</span>
+            <span class="n">get_mqmd</span><span class="p">[</span><span class="s2">&quot;CorrelId&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">put_mqmd</span><span class="p">[</span><span class="s2">&quot;MsgId&quot;</span><span class="p">]</span>
+
+            <span class="c1"># Set up the get options.</span>
+            <span class="n">get_opts</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">GMO</span><span class="p">(</span>
+                <span class="n">Options</span><span class="o">=</span><span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQGMO_NO_SYNCPOINT</span> <span class="o">+</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQGMO_FAIL_IF_QUIESCING</span> <span class="o">+</span>
+                        <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQGMO_WAIT</span><span class="p">)</span>
+
+            <span class="c1"># Version must be set to 2 to correlate.</span>
+            <span class="n">get_opts</span><span class="p">[</span><span class="s2">&quot;Version&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQGMO_VERSION_2</span>
+
+            <span class="c1"># Tell MQ that we are matching on CorrelId.</span>
+            <span class="n">get_opts</span><span class="p">[</span><span class="s2">&quot;MatchOptions&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQMO_MATCH_CORREL_ID</span>
+
+            <span class="c1"># Set the wait timeout of half a second.</span>
+            <span class="n">get_opts</span><span class="p">[</span><span class="s2">&quot;WaitInterval&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">500</span>
+
+            <span class="c1"># Open the replyto queue and get response message,</span>
+            <span class="n">replyto_queue</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">Queue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">qm</span><span class="p">,</span> <span class="n">replyto_queue_name</span><span class="p">,</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQOO_INPUT_SHARED</span><span class="p">)</span>
+            <span class="n">response_message</span> <span class="o">=</span> <span class="n">replyto_queue</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">get_mqmd</span><span class="p">,</span> <span class="n">get_opts</span><span class="p">)</span>
+
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Got response message [</span><span class="si">%s</span><span class="s2">]&quot;</span> <span class="o">%</span> <span class="n">response_message</span><span class="p">)</span>
+
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">ResponseProducer</span><span class="p">(</span><span class="n">Producer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Instances of this class wait for request messages and produce responses.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="c1"># Request message descriptor, will be reset after processing each</span>
+        <span class="c1"># request message.</span>
+        <span class="n">request_md</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">MD</span><span class="p">()</span>
+
+        <span class="c1"># Get Message Options</span>
+        <span class="n">gmo</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">GMO</span><span class="p">()</span>
+        <span class="n">gmo</span><span class="o">.</span><span class="n">Options</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQGMO_WAIT</span> <span class="o">|</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQGMO_FAIL_IF_QUIESCING</span>
+        <span class="n">gmo</span><span class="o">.</span><span class="n">WaitInterval</span> <span class="o">=</span> <span class="mi">500</span> <span class="c1"># Half a second</span>
+
+        <span class="n">queue</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">Queue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">qm</span><span class="p">,</span> <span class="n">request_queue_name</span><span class="p">)</span>
+
+        <span class="n">keep_running</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">while</span> <span class="n">keep_running</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># Wait up to to gmo.WaitInterval for a new message.</span>
+                <span class="n">request_message</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">request_md</span><span class="p">,</span> <span class="n">gmo</span><span class="p">)</span>
+
+                <span class="c1"># Create a response message descriptor with the CorrelId</span>
+                <span class="c1"># set to the value of MsgId of the original request message.</span>
+                <span class="n">response_md</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">MD</span><span class="p">()</span>
+                <span class="n">response_md</span><span class="o">.</span><span class="n">CorrelId</span> <span class="o">=</span> <span class="n">request_md</span><span class="o">.</span><span class="n">MsgId</span>
+
+                <span class="n">response_message</span> <span class="o">=</span> <span class="s2">&quot;Response to message </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">request_message</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">replyto_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">response_message</span><span class="p">,</span> <span class="n">response_md</span><span class="p">)</span>
+
+                <span class="c1"># Reset the MsgId, CorrelId &amp; GroupId so that we can reuse</span>
+                <span class="c1"># the same &#39;md&#39; object again.</span>
+                <span class="n">request_md</span><span class="o">.</span><span class="n">MsgId</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQMI_NONE</span>
+                <span class="n">request_md</span><span class="o">.</span><span class="n">CorrelId</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQCI_NONE</span>
+                <span class="n">request_md</span><span class="o">.</span><span class="n">GroupId</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQGI_NONE</span>
+
+            <span class="k">except</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">MQMIError</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">comp</span> <span class="o">==</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQCC_FAILED</span> <span class="ow">and</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span> <span class="o">==</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQRC_NO_MSG_AVAILABLE</span><span class="p">:</span>
+                    <span class="c1"># No messages, that&#39;s OK, we can ignore it.</span>
+                    <span class="k">pass</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># Some other error condition.</span>
+                    <span class="k">raise</span>
+
+<span class="n">req</span> <span class="o">=</span> <span class="n">RequestProducer</span><span class="p">()</span>
+<span class="n">resp</span> <span class="o">=</span> <span class="n">ResponseProducer</span><span class="p">()</span>
+
+<span class="n">req</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+<span class="n">resp</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+    <span class="n">req</span><span class="o">.</span><span class="n">qm</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Notes:</p>
+<ul class="simple">
+<li>The pattern of waiting for response messages by CorrelationId is very common
+and a useful one,</li>
+<li>Requesting application sends a message to the queue and uses the newly
+created put message’s MsgId as a parameter for receiving the responses, that is,
+it expectes that in a given period of time there will be a message on the response
+queue whose CorrelationId will be equal to MsgId,</li>
+<li>Responding application receive the requests, copies the MsgId into CorrelationId
+field and sends the response,</li>
+<li>Requesting application receives the response because there was a message with
+the expected CorrelationId.</li>
+</ul>
+</div>
+<div class="section" id="how-to-avoid-mqrc-already-connected">
+<h2>How to avoid MQRC_ALREADY_CONNECTED<a class="headerlink" href="#how-to-avoid-mqrc-already-connected" title="Permalink to this headline">¶</a></h2>
+<p>Code:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pymqi</span>
+
+<span class="n">queue_manager</span> <span class="o">=</span> <span class="s2">&quot;QM01&quot;</span>
+<span class="n">channel</span> <span class="o">=</span> <span class="s2">&quot;SVRCONN.1&quot;</span>
+<span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;192.168.1.135&quot;</span>
+<span class="n">port</span> <span class="o">=</span> <span class="s2">&quot;1434&quot;</span>
+<span class="n">queue_name</span> <span class="o">=</span> <span class="s2">&quot;TEST.1&quot;</span>
+<span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;Hello from Python!&quot;</span>
+<span class="n">conn_info</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">(</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+
+<span class="n">cd</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CD</span><span class="p">()</span>
+
+<span class="n">cd</span><span class="o">.</span><span class="n">ChannelName</span> <span class="o">=</span> <span class="n">channel</span>
+<span class="n">cd</span><span class="o">.</span><span class="n">ConnectionName</span> <span class="o">=</span> <span class="n">conn_info</span>
+<span class="n">cd</span><span class="o">.</span><span class="n">ChannelType</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQCHT_CLNTCONN</span>
+<span class="n">cd</span><span class="o">.</span><span class="n">TransportType</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQXPT_TCP</span>
+
+<span class="n">connect_options</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQCNO_HANDLE_SHARE_BLOCK</span>
+
+<span class="n">qmgr</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">QueueManager</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="n">qmgr</span><span class="o">.</span><span class="n">connect_with_options</span><span class="p">(</span><span class="n">queue_manager</span><span class="p">,</span> <span class="n">cd</span><span class="o">=</span><span class="n">cd</span><span class="p">,</span> <span class="n">opts</span><span class="o">=</span><span class="n">connect_options</span><span class="p">)</span>
+    <span class="n">qmgr</span><span class="o">.</span><span class="n">connect_with_options</span><span class="p">(</span><span class="n">queue_manager</span><span class="p">,</span> <span class="n">cd</span><span class="o">=</span><span class="n">cd</span><span class="p">,</span> <span class="n">opts</span><span class="o">=</span><span class="n">connect_options</span><span class="p">)</span>
+
+<span class="n">queue</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">Queue</span><span class="p">(</span><span class="n">qmgr</span><span class="p">,</span> <span class="n">queue_name</span><span class="p">)</span>
+<span class="n">queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+<span class="n">queue</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="n">qmgr</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pymqi</span>
+
+<span class="n">queue_manager</span> <span class="o">=</span> <span class="s2">&quot;QM01&quot;</span>
+<span class="n">channel</span> <span class="o">=</span> <span class="s2">&quot;SVRCONN.1&quot;</span>
+<span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;192.168.1.135&quot;</span>
+<span class="n">port</span> <span class="o">=</span> <span class="s2">&quot;1434&quot;</span>
+<span class="n">queue_name</span> <span class="o">=</span> <span class="s2">&quot;TEST.1&quot;</span>
+<span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;Hello from Python!&quot;</span>
+<span class="n">conn_info</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">(</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+
+<span class="n">qmgr</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">QueueManager</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">qmgr</span><span class="o">.</span><span class="n">connect_tcp_client</span><span class="p">(</span><span class="n">queue_manager</span><span class="p">,</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CD</span><span class="p">(),</span> <span class="n">channel</span><span class="p">,</span> <span class="n">conn_info</span><span class="p">)</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">qmgr</span><span class="o">.</span><span class="n">connect_tcp_client</span><span class="p">(</span><span class="n">queue_manager</span><span class="p">,</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CD</span><span class="p">(),</span> <span class="n">channel</span><span class="p">,</span> <span class="n">conn_info</span><span class="p">)</span>
+<span class="k">except</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">MQMIError</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">comp</span> <span class="o">==</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQCC_WARNING</span> <span class="ow">and</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span> <span class="o">==</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQRC_ALREADY_CONNECTED</span><span class="p">:</span>
+        <span class="c1"># Move along, nothing to see here..</span>
+        <span class="k">pass</span>
+
+<span class="n">queue</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">Queue</span><span class="p">(</span><span class="n">qmgr</span><span class="p">,</span> <span class="n">queue_name</span><span class="p">)</span>
+<span class="n">queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+<span class="n">queue</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="n">qmgr</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Notes:</p>
+<ul class="simple">
+<li>Two code snippets are copy’and’pastable answers to the question but a discussion
+is in order,</li>
+<li>The first snippet is the recommended way, it tells MQ to reuse a single connection
+regardless of how many times the application will be issuing a request for
+establishing a new connection. That’s also a pattern to use when your application
+is multithreaded, without using MQCNO_HANDLE_SHARE_BLOCK MQ would not allow
+the threads to reuse the same connection,</li>
+<li>The second one shows how to ignore the particular exception indicating that
+an application has been already connected.</li>
+</ul>
+</div>
+<div class="section" id="how-to-define-a-channel">
+<h2>How to define a channel<a class="headerlink" href="#how-to-define-a-channel" title="Permalink to this headline">¶</a></h2>
+<p>Code:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pymqi</span>
+
+<span class="n">queue_manager</span> <span class="o">=</span> <span class="s2">&quot;QM01&quot;</span>
+<span class="n">channel</span> <span class="o">=</span> <span class="s2">&quot;SVRCONN.1&quot;</span>
+<span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;192.168.1.135&quot;</span>
+<span class="n">port</span> <span class="o">=</span> <span class="s2">&quot;1434&quot;</span>
+<span class="n">conn_info</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">(</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+
+<span class="n">channel_name</span> <span class="o">=</span> <span class="s2">&quot;MYCHANNEL.1&quot;</span>
+<span class="n">channel_type</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQXC</span><span class="o">.</span><span class="n">MQCHT_SVRCONN</span>
+
+<span class="n">args</span> <span class="o">=</span> <span class="p">{</span><span class="n">pymqi</span><span class="o">.</span><span class="n">CMQCFC</span><span class="o">.</span><span class="n">MQCACH_CHANNEL_NAME</span><span class="p">:</span> <span class="n">channel_name</span><span class="p">,</span>
+        <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQCFC</span><span class="o">.</span><span class="n">MQIACH_CHANNEL_TYPE</span><span class="p">:</span> <span class="n">channel_type</span><span class="p">}</span>
+
+<span class="n">qmgr</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">queue_manager</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">conn_info</span><span class="p">)</span>
+
+<span class="n">pcf</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">PCFExecute</span><span class="p">(</span><span class="n">qmgr</span><span class="p">)</span>
+<span class="n">pcf</span><span class="o">.</span><span class="n">MQCMD_CREATE_CHANNEL</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+
+<span class="n">qmgr</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Notes:</p>
+<ul class="simple">
+<li>Instances of <em>pymqi.PCFExecute</em> class have direct access to all PCF
+administrative MQ commands. The commands expect a dictionary of parameters
+describing the properties of MQ objects which need to be manipulated. All commands
+and appropriate parameters may be loooked up in modules <em>pymqi.CMQC</em>, <em>pymqi.CMQXC</em> and <em>pymqi.CMQCFC</em>,</li>
+<li>The code above is equivalent to following MQSC command:
+<em>DEFINE CHANNEL(MYCHANNEL.1) CHLTYPE(SVRCONN)</em>.</li>
+</ul>
+</div>
+<div class="section" id="how-to-define-a-queue">
+<h2>How to define a queue<a class="headerlink" href="#how-to-define-a-queue" title="Permalink to this headline">¶</a></h2>
+<p>Code:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pymqi</span>
+
+<span class="n">queue_manager</span> <span class="o">=</span> <span class="s2">&quot;QM01&quot;</span>
+<span class="n">channel</span> <span class="o">=</span> <span class="s2">&quot;SVRCONN.1&quot;</span>
+<span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;192.168.1.135&quot;</span>
+<span class="n">port</span> <span class="o">=</span> <span class="s2">&quot;1434&quot;</span>
+<span class="n">conn_info</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">(</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+
+<span class="n">queue_name</span> <span class="o">=</span> <span class="s2">&quot;MYQUEUE.1&quot;</span>
+<span class="n">queue_type</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQQT_LOCAL</span>
+<span class="n">max_depth</span> <span class="o">=</span> <span class="mi">123456</span>
+
+<span class="n">args</span> <span class="o">=</span> <span class="p">{</span><span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQCA_Q_NAME</span><span class="p">:</span> <span class="n">queue_name</span><span class="p">,</span>
+        <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQIA_Q_TYPE</span><span class="p">:</span> <span class="n">queue_type</span><span class="p">,</span>
+        <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQIA_MAX_Q_DEPTH</span><span class="p">:</span> <span class="n">max_depth</span><span class="p">}</span>
+
+<span class="n">qmgr</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">queue_manager</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">conn_info</span><span class="p">)</span>
+
+<span class="n">pcf</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">PCFExecute</span><span class="p">(</span><span class="n">qmgr</span><span class="p">)</span>
+<span class="n">pcf</span><span class="o">.</span><span class="n">MQCMD_CREATE_Q</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+
+<span class="n">qmgr</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Notes:</p>
+<ul class="simple">
+<li>Instances of <em>pymqi.PCFExecute</em> class have direct access to all PCF
+administrative MQ commands. The commands expect a dictionary of parameters
+describing the properties of MQ objects which need to be manipulated. All commands
+and appropriate parameters may be loooked up in modules <em>pymqi.CMQC</em>, <em>pymqi.CMQXC</em> and <em>pymqi.CMQCFC</em>,</li>
+<li>The code above is equivalent to following MQSC command:
+<em>DEFINE QLOCAL(MYQUEUE.1) MAXDEPTH(123456)</em>.</li>
+</ul>
+</div>
+<div class="section" id="how-to-display-channels">
+<h2>How to display channels<a class="headerlink" href="#how-to-display-channels" title="Permalink to this headline">¶</a></h2>
+<p>Code:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">import</span> <span class="nn">pymqi</span>
+
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+
+<span class="n">queue_manager</span> <span class="o">=</span> <span class="s2">&quot;QM01&quot;</span>
+<span class="n">channel</span> <span class="o">=</span> <span class="s2">&quot;SVRCONN.1&quot;</span>
+<span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;192.168.1.135&quot;</span>
+<span class="n">port</span> <span class="o">=</span> <span class="s2">&quot;1434&quot;</span>
+<span class="n">conn_info</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">(</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+
+<span class="n">prefix</span> <span class="o">=</span> <span class="s2">&quot;SYSTEM.*&quot;</span>
+
+<span class="n">args</span> <span class="o">=</span> <span class="p">{</span><span class="n">pymqi</span><span class="o">.</span><span class="n">CMQCFC</span><span class="o">.</span><span class="n">MQCACH_CHANNEL_NAME</span><span class="p">:</span> <span class="n">prefix</span><span class="p">}</span>
+
+<span class="n">qmgr</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">queue_manager</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">conn_info</span><span class="p">)</span>
+<span class="n">pcf</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">PCFExecute</span><span class="p">(</span><span class="n">qmgr</span><span class="p">)</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">pcf</span><span class="o">.</span><span class="n">MQCMD_INQUIRE_CHANNEL</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+<span class="k">except</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">MQMIError</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">comp</span> <span class="o">==</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQCC_FAILED</span> <span class="ow">and</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span> <span class="o">==</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQRC_UNKNOWN_OBJECT_NAME</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;No channels matched prefix [</span><span class="si">%s</span><span class="s2">]&quot;</span> <span class="o">%</span> <span class="n">prefix</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">channel_info</span> <span class="ow">in</span> <span class="n">response</span><span class="p">:</span>
+        <span class="n">channel_name</span> <span class="o">=</span> <span class="n">channel_info</span><span class="p">[</span><span class="n">CMQCFC</span><span class="o">.</span><span class="n">MQCACH_CHANNEL_NAME</span><span class="p">]</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Found channel [</span><span class="si">%s</span><span class="s2">]&quot;</span> <span class="o">%</span> <span class="n">channel_name</span><span class="p">)</span>
+
+<span class="n">qmgr</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Notes:</p>
+<ul class="simple">
+<li>PCF calls that read MQ objects’ definition or status, and MQCMD_INQUIRE_CHANNEL
+among them, return a list of dictionaries, items of which describe the particular
+objects queried for.</li>
+<li>The code above is equivalent to following MQSC command:
+<em>DIS CHANNEL(SYSTEM.*)</em>.</li>
+</ul>
+</div>
+<div class="section" id="how-to-display-queues">
+<h2>How to display queues<a class="headerlink" href="#how-to-display-queues" title="Permalink to this headline">¶</a></h2>
+<p>Code:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">import</span> <span class="nn">pymqi</span>
+
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+
+<span class="n">queue_manager</span> <span class="o">=</span> <span class="s2">&quot;QM01&quot;</span>
+<span class="n">channel</span> <span class="o">=</span> <span class="s2">&quot;SVRCONN.1&quot;</span>
+<span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;192.168.1.135&quot;</span>
+<span class="n">port</span> <span class="o">=</span> <span class="s2">&quot;1434&quot;</span>
+<span class="n">conn_info</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">(</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+
+<span class="n">prefix</span> <span class="o">=</span> <span class="s2">&quot;SYSTEM.*&quot;</span>
+<span class="n">queue_type</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQQT_MODEL</span>
+
+<span class="n">args</span> <span class="o">=</span> <span class="p">{</span><span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQCA_Q_NAME</span><span class="p">:</span> <span class="n">prefix</span><span class="p">,</span>
+        <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQIA_Q_TYPE</span><span class="p">:</span> <span class="n">queue_type</span><span class="p">}</span>
+
+<span class="n">qmgr</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">queue_manager</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">conn_info</span><span class="p">)</span>
+<span class="n">pcf</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">PCFExecute</span><span class="p">(</span><span class="n">qmgr</span><span class="p">)</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">pcf</span><span class="o">.</span><span class="n">MQCMD_INQUIRE_Q</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+<span class="k">except</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">MQMIError</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">comp</span> <span class="o">==</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQCC_FAILED</span> <span class="ow">and</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span> <span class="o">==</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQRC_UNKNOWN_OBJECT_NAME</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;No queues matched given arguments.&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">queue_info</span> <span class="ow">in</span> <span class="n">response</span><span class="p">:</span>
+        <span class="n">queue_name</span> <span class="o">=</span> <span class="n">queue_info</span><span class="p">[</span><span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQCA_Q_NAME</span><span class="p">]</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Found queue [</span><span class="si">%s</span><span class="s2">]&quot;</span> <span class="o">%</span> <span class="n">queue_name</span><span class="p">)</span>
+
+<span class="n">qmgr</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Notes:</p>
+<ul class="simple">
+<li>PCF inquiries, MQCMD_INQUIRE_Q including, return a list of dictionaries,
+items of which describe the particular objects queried for.</li>
+<li>The code above is equivalent to following MQSC command:
+<em>DIS QMODEL(SYSTEM.*)</em>.</li>
+</ul>
+</div>
+<div class="section" id="how-to-ping-the-queue-manager">
+<h2>How to ping the queue manager<a class="headerlink" href="#how-to-ping-the-queue-manager" title="Permalink to this headline">¶</a></h2>
+<p>Code:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pymqi</span>
+
+<span class="n">queue_manager</span> <span class="o">=</span> <span class="s2">&quot;QM01&quot;</span>
+<span class="n">channel</span> <span class="o">=</span> <span class="s2">&quot;SVRCONN.1&quot;</span>
+<span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;192.168.1.135&quot;</span>
+<span class="n">port</span> <span class="o">=</span> <span class="s2">&quot;1434&quot;</span>
+<span class="n">conn_info</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">(</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+
+<span class="n">qmgr</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">queue_manager</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">conn_info</span><span class="p">)</span>
+
+<span class="n">pcf</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">PCFExecute</span><span class="p">(</span><span class="n">qmgr</span><span class="p">)</span>
+<span class="n">pcf</span><span class="o">.</span><span class="n">MQCMD_PING_Q_MGR</span><span class="p">()</span>
+
+<span class="n">qmgr</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Notes:</p>
+<ul class="simple">
+<li>Not all PCF commands require input parameters, MQCMD_PING_Q_MGR is one such an
+argument-less command.</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+
+<style type="text/css">
+hr {
+  position: relative;
+  padding: 0;
+  margin: 8px auto;
+  border: none;
+  border-top: 1px solid #666666;
+  border-bottom: 1px solid #aaaaaa;
+  font-size: 1px;
+  line-height: 0;
+  overflow: visible;
+  width:85%
+}
+
+img {
+  vertical-align:middle
+}
+
+</style>
+
+<ul>
+    <li><img src="_static/rss-icon.png" alt="RSS icon" />&nbsp;<a href="https://zato.io/blog" title="Author's blog">Blog</a></li>
+    <li><img src="_static/twitter.png" alt="Twitter icon" />&nbsp;<a href="https://twitter.com/zatosource" title="Author on Twitter">Twitter</a></li>
+    <li><img src="_static/linkedin.png" alt="LinkedIn icon" />&nbsp;<a href="http://www.linkedin.com/groups?gid=3726448" title="Project's LinkedIn group">LinkedIn</a></li>
+</ul>
+
+<hr/>
+
+
+
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Examples</a><ul>
+<li><a class="reference internal" href="#connecting-in-client-mode">Connecting in client mode</a></li>
+<li><a class="reference internal" href="#connecting-in-client-mode-with-username-password-credentials">Connecting in client mode with username/password credentials</a></li>
+<li><a class="reference internal" href="#connecting-in-bindings-mode">Connecting in bindings mode</a></li>
+<li><a class="reference internal" href="#how-to-put-the-message-on-a-queue">How to put the message on a queue</a></li>
+<li><a class="reference internal" href="#how-to-get-the-message-off-a-queue">How to get the message off a queue</a></li>
+<li><a class="reference internal" href="#how-to-wait-for-a-single-message">How to wait for a single message</a></li>
+<li><a class="reference internal" href="#how-to-wait-for-multiple-messages">How to wait for multiple messages</a></li>
+<li><a class="reference internal" href="#how-to-specify-dynamic-reply-to-queues">How to specify dynamic reply-to queues</a></li>
+<li><a class="reference internal" href="#how-to-send-responses-to-reply-to-queues">How to send responses to reply-to queues</a></li>
+<li><a class="reference internal" href="#how-to-publish-messages-on-topics">How to publish messages on topics</a></li>
+<li><a class="reference internal" href="#how-to-subscribe-to-topics-and-avoid-mqrc-sub-already-exists-at-the-same-time">How to subscribe to topics (and avoid MQRC_SUB_ALREADY_EXISTS at the same time)</a></li>
+<li><a class="reference internal" href="#how-to-use-ssl-tls">How to use SSL &amp; TLS</a></li>
+<li><a class="reference internal" href="#how-to-set-and-get-the-message-priority">How to set and get the message priority</a></li>
+<li><a class="reference internal" href="#how-to-use-channel-compression">How to use channel compression</a></li>
+<li><a class="reference internal" href="#how-to-check-completion-and-reason-codes">How to check completion- and reason codes</a></li>
+<li><a class="reference internal" href="#how-to-check-the-versions-of-ibm-mq-packages-installed-linux">How to check the versions of IBM MQ packages installed, Linux</a></li>
+<li><a class="reference internal" href="#how-to-check-the-versions-of-ibm-mq-packages-installed-windows">How to check the versions of IBM MQ packages installed, Windows</a></li>
+<li><a class="reference internal" href="#how-to-use-an-alternate-user-id">How to use an alternate user ID</a></li>
+<li><a class="reference internal" href="#how-to-correlate-request-and-response-messages-using-correlationid">How to correlate request and response messages using CorrelationId</a></li>
+<li><a class="reference internal" href="#how-to-avoid-mqrc-already-connected">How to avoid MQRC_ALREADY_CONNECTED</a></li>
+<li><a class="reference internal" href="#how-to-define-a-channel">How to define a channel</a></li>
+<li><a class="reference internal" href="#how-to-define-a-queue">How to define a queue</a></li>
+<li><a class="reference internal" href="#how-to-display-channels">How to display channels</a></li>
+<li><a class="reference internal" href="#how-to-display-queues">How to display queues</a></li>
+<li><a class="reference internal" href="#how-to-ping-the-queue-manager">How to ping the queue manager</a></li>
+</ul>
+</li>
+</ul>
+
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="support.html"
+                        title="previous chapter">Support, consulting and contact</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/examples.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="support.html" title="Support, consulting and contact"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyMQI latest documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright Zato Source s.r.o..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+    </div>
+  </body>
+</html>
