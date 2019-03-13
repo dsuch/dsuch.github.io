@@ -3,7 +3,7 @@ PyMQI
 
 .. note::
 
-    Sponsored by `Zato <https://zato.io/docs?pymqi>`_ - Open-Source ESB, SOA, REST, APIs and Cloud Integrations in Python
+    Sponsored by `Zato <https://zato.io/docs?pymqi-idx01>`_ - Open-Source ESB, SOA, REST, APIs and Cloud Integrations in Python
 
 Other sections:
 
@@ -67,18 +67,20 @@ The backbone of IBM MQ Python messaging
 PyMQI is a relatively low-level library that requires one to know IBM APIs fairly well.
 
 It serves, however, as the basis for IBM MQ support in
-`Zato <https://zato.io/docs?pymqi>`_,
+`Zato <https://zato.io/docs?pymqi-idx02>`_,
 which is an enterprise API platform and backend application server
 in Python that lets one connect to many technologies with little or no programming
 
-This includes IBM MQ queue managers and ability to seamlessly integrate with Java JMS systems.
+This includes IBM MQ queue managers along with ability to seamlessly integrate with Java JMS systems.
 
 
 
 .. image:: https://zato.io/support/pymqi/mqdef.png
    :width: 55%
 
-Check out this
-`blog post <https://zato.io/blog/posts/websphere-mq-python-zato.html>`_
+Read these
+`blog <https://zato.io/blog/posts/python-ibm-mq-part-1.html?pymqi-gh2>`
+`posts https://zato.io/blog/posts/websphere-mq-python-zato.html?pymqi-gh2>`
 for an introduction
-and visit `Zato documentation <https://zato.io/docs?pymqi>`_ for more information.
+and visit `Zato documentation <https://zato.io/docs?pymqi-gh03>` for more information.
+
