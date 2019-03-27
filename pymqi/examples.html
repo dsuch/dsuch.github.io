@@ -85,6 +85,8 @@ if you’d like to see any specific example be added. Thanks!</p>
 <ul class="simple">
 <li>Connecting with username/password credentials was added in PyMQI 1.5</li>
 <li>The functionality requires IBM MQ 8.0+ queue managers</li>
+<li>Credentials need to be provided to PyMQI as regular Python variables - PyMQI will not look them
+up in any user database or similar</li>
 </ul>
 </div>
 <div class="section" id="connecting-in-bindings-mode">
@@ -1177,6 +1179,39 @@ items of which describe the particular objects queried for.</li>
 <em>DIS QMODEL(SYSTEM.*)</em>.</li>
 </ul>
 </div>
+<div class="section" id="how-to-use-query-filters">
+<h2>How to use query filters<a class="headerlink" href="#how-to-use-query-filters" title="Permalink to this headline">¶</a></h2>
+<p>Code:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">import</span> <span class="nn">pymqi</span>
+
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+
+<span class="n">qmgr</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">queue_manager</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">conn_info</span><span class="p">)</span>
+<span class="n">pcf</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">PCFExecute</span><span class="p">(</span><span class="n">qmgr</span><span class="p">)</span>
+
+<span class="n">attrs</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="n">CMQC</span><span class="o">.</span><span class="n">MQCA_Q_NAME</span> <span class="p">:</span><span class="s">&#39;*&#39;</span><span class="p">,</span>
+  <span class="n">CMQC</span><span class="o">.</span><span class="n">MQIA_Q_TYPE</span> <span class="p">:</span> <span class="n">CMQC</span><span class="o">.</span><span class="n">MQQT_LOCAL</span><span class="p">,</span>
+  <span class="n">CMQCFC</span><span class="o">.</span><span class="n">MQIACF_Q_ATTRS</span> <span class="p">:</span> <span class="n">CMQC</span><span class="o">.</span><span class="n">MQCA_Q_NAME</span>
+<span class="p">}</span>
+
+<span class="n">filter1</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">Filter</span><span class="p">(</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQCA_Q_DESC</span><span class="p">)</span><span class="o">.</span><span class="n">like</span><span class="p">(</span><span class="s">&#39;IBM MQ *&#39;</span><span class="p">)</span>
+<span class="n">filter2</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">Filter</span><span class="p">(</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQIA_CURRENT_Q_DEPTH</span><span class="p">)</span><span class="o">.</span><span class="n">greater</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">pcf</span><span class="o">.</span><span class="n">MQCMD_INQUIRE_Q</span><span class="p">(</span><span class="n">attrs</span><span class="p">,</span> <span class="p">[</span><span class="n">f1</span><span class="p">,</span> <span class="n">f2</span><span class="p">])</span>
+
+<span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&#39;Result is %s&#39;</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Notes:</p>
+<ul class="simple">
+<li>String and integer filters can be applied when looking up MQ objects</li>
+<li>Filters are AND-joined</li>
+<li>In the example above, only queues whose description starts with ‘IBM MQ’ and whose depth is greater than 2 will be returned</li>
+</ul>
+</div>
 <div class="section" id="how-to-ping-the-queue-manager">
 <h2>How to ping the queue manager<a class="headerlink" href="#how-to-ping-the-queue-manager" title="Permalink to this headline">¶</a></h2>
 <p>Code:</p>
@@ -1238,6 +1273,7 @@ argument-less command.</li>
 <li><a class="reference internal" href="#how-to-define-a-queue">How to define a queue</a></li>
 <li><a class="reference internal" href="#how-to-display-channels">How to display channels</a></li>
 <li><a class="reference internal" href="#how-to-display-queues">How to display queues</a></li>
+<li><a class="reference internal" href="#how-to-use-query-filters">How to use query filters</a></li>
 <li><a class="reference internal" href="#how-to-ping-the-queue-manager">How to ping the queue manager</a></li>
 </ul>
 </li>
