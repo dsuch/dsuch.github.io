@@ -153,6 +153,56 @@ immediately a pymqi.MQMIError will be raised with MQ reason code set to
 and <a class="reference internal" href="#wait-multiple-messages"><span class="std std-ref">here</span></a> for info on how to wait for a single or multiple messages.</li>
 </ul>
 </div>
+<div class="section" id="sending-unicode-data-vs-bytes">
+<h2>Sending Unicode data vs. bytes<a class="headerlink" href="#sending-unicode-data-vs-bytes" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Note that Unicode and bytes handling is unified in PyMQI regardless of whether one uses Python 2 or 3, i.e.
+everything below applies to both Python lines</li>
+<li>PyMQI does not process in any way bytes objects used in <strong>queue.put</strong> calls - this means that if you encode
+your data as bytes before handling it to queue.put, the data will be sent as-is</li>
+<li>If you give queue.put Unicode objects on input, though, they will be automatically converted to bytes,
+using <strong>UTF-8</strong> by default - this should suffice in most cases</li>
+<li>It is possible to change the default encoding used for conversion from Unicode to bytes by providing
+two parameters when calling <strong>pymqi.connect</strong> or when constructing <strong>QueueManager</strong> objects</li>
+<li>The parameters are called <strong>bytes_encoding</strong> and <strong>default_ccsid</strong> and their default values are <strong>utf8</strong> and <strong>1208</strong>,
+respectively</li>
+<li>Parameter bytes_encoding is used for conversion of Python Unicode objects to bytes objects</li>
+<li>Parameter default_ccsid is used to specify a CCSID in the underlying call’s MQMD structure</li>
+<li>Both parameters will be used in all put calls related to a single MQ connection - that is, they are specified once only
+on the level of the connection to a queue manager, rather than individually for each put call</li>
+<li>If not using the defaults, it is the user’s responsibility to make sure that the two parameters match - for instance,
+encoding UTF-8 is represented by CCSID 1208, but a different CCSID may be required with other encodings</li>
+<li>It is also the user’s responsibility to ensure that default_ccsid matches the queue manager’s CCSID</li>
+<li>Again, the conversion from Unicode to bytes as well as the application of bytes_encoding and default_ccsid take place
+only if Unicode objects are given on input to queue.put - if data is already bytes, there is no conversion</li>
+<li>In the example below, message is a Unicode object and it will be converted to ISO-8859-1 by PyMQI
+because this is the encoding explicitly specified. Also, that encoding’s corresponding CCSID - 819 - is given on input
+to pymqi.connect.</li>
+</ul>
+<p>Code:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">pymqi</span>
+
+<span class="n">queue_manager</span> <span class="o">=</span> <span class="s">&#39;QM1&#39;</span>
+<span class="n">channel</span> <span class="o">=</span> <span class="s">&#39;DEV.APP.SVRCONN&#39;</span>
+<span class="n">host</span> <span class="o">=</span> <span class="s">&#39;127.0.0.1&#39;</span>
+<span class="n">port</span> <span class="o">=</span> <span class="s">&#39;1414&#39;</span>
+<span class="n">queue_name</span> <span class="o">=</span> <span class="s">&#39;TEST.1&#39;</span>
+<span class="n">message</span> <span class="o">=</span> <span class="s">u&#39;My Unicode data&#39;</span>
+<span class="n">conn_info</span> <span class="o">=</span> <span class="s">&#39;%s(%s)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+
+<span class="n">bytes_encoding</span> <span class="o">=</span> <span class="s">&#39;iso-8859-1&#39;</span>
+<span class="n">default_ccsid</span> <span class="o">=</span> <span class="mi">819</span>
+
+<span class="n">qmgr</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">queue_manager</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">conn_info</span><span class="p">,</span> <span class="n">bytes_encoding</span><span class="o">=</span><span class="n">bytes_encoding</span><span class="p">,</span> <span class="n">default_ccsid</span><span class="o">=</span><span class="n">default_ccsid</span><span class="p">)</span>
+
+<span class="n">queue</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">Queue</span><span class="p">(</span><span class="n">qmgr</span><span class="p">,</span> <span class="n">queue_name</span><span class="p">)</span>
+<span class="n">queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+<span class="n">queue</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="n">qmgr</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
 <div class="section" id="how-to-get-a-message-without-jms-mqrfh2-headers">
 <h2>How to get a message without JMS (MQRFH2) headers<a class="headerlink" href="#how-to-get-a-message-without-jms-mqrfh2-headers" title="Permalink to this headline">¶</a></h2>
 <p>Code:</p>
@@ -265,9 +315,9 @@ PyMQI uses it by default unless it’s overridden.</li>
         <span class="n">md</span><span class="o">.</span><span class="n">CorrelId</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQCI_NONE</span>
         <span class="n">md</span><span class="o">.</span><span class="n">GroupId</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQGI_NONE</span>
 
-    <span class="k">except</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">MQMIError</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+    <span class="k">except</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">MQMIError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">comp</span> <span class="o">==</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQCC_FAILED</span> <span class="ow">and</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span> <span class="o">==</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQRC_NO_MSG_AVAILABLE</span><span class="p">:</span>
-            <span class="c"># No messages, that&#39;s OK, we can ignore it.</span>
+            <span class="c"># No messages, that is OK, we can ignore it.</span>
             <span class="k">pass</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c"># Some other error condition.</span>
@@ -501,7 +551,7 @@ note passing of the information regarding what MQ should do with the related obj
 <span class="n">put_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 
 <span class="n">get_queue</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">Queue</span><span class="p">(</span><span class="n">qmgr</span><span class="p">,</span> <span class="n">queue_name</span><span class="p">)</span>
-<span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&#39;Here&#39;</span><span class="n">s</span> <span class="n">the</span> <span class="n">message</span> <span class="n">again</span><span class="p">:</span> <span class="p">[</span><span class="o">%</span><span class="n">s</span><span class="p">]</span><span class="s">&#39; % get_queue.get())</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&#39;Here is the message again: [%s]&#39;</span> <span class="o">%</span> <span class="n">get_queue</span><span class="o">.</span><span class="n">get</span><span class="p">())</span>
 
 <span class="n">put_queue</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 <span class="n">get_queue</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
@@ -592,7 +642,7 @@ SSLCIPH attribute.</li>
 <span class="n">get_queue</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">Queue</span><span class="p">(</span><span class="n">qmgr</span><span class="p">,</span> <span class="n">queue_name</span><span class="p">)</span>
 <span class="n">message_body</span> <span class="o">=</span> <span class="n">get_queue</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="k">None</span><span class="p">,</span> <span class="n">get_md</span><span class="p">)</span>
 
-<span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&#39;Received a message, priority [%s].&#39;</span> <span class="o">%</span> <span class="n">get_md</span><span class="o">.</span><span class="n">Priority</span><span class="p">)</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&#39;Received a message, priority `%s`.&#39;</span> <span class="o">%</span> <span class="n">get_md</span><span class="o">.</span><span class="n">Priority</span><span class="p">)</span>
 
 <span class="n">put_queue</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 <span class="n">get_queue</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
@@ -649,15 +699,15 @@ MQSC command: <em>ALTER CHANNEL(SVRCONN.1) CHLTYPE(SVRCONN) COMPMSG(ZLIBHIGH)</e
 
 <span class="n">queue_manager</span> <span class="o">=</span> <span class="s">&#39;QM1&#39;</span>
 <span class="n">channel</span> <span class="o">=</span> <span class="s">&#39;DEV.APP.SVRCONN&#39;</span>
-<span class="n">host</span> <span class="o">=</span> <span class="s">&#39;foo.bar&#39;</span> <span class="c"># Note the made up host name</span>
+<span class="n">host</span> <span class="o">=</span> <span class="s">&#39;localhost.invalid&#39;</span> <span class="c"># Note the invalid hostname here</span>
 <span class="n">port</span> <span class="o">=</span> <span class="s">&#39;1414&#39;</span>
 <span class="n">conn_info</span> <span class="o">=</span> <span class="s">&#39;%s(%s)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="n">qmgr</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">queue_manager</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">conn_info</span><span class="p">)</span>
-<span class="k">except</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">MQMIError</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+<span class="k">except</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">MQMIError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
     <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">comp</span> <span class="o">==</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQCC_FAILED</span> <span class="ow">and</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span> <span class="o">==</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQRC_HOST_NOT_AVAILABLE</span><span class="p">:</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s">&#39;Such a host [%s] does not exist.&#39;</span> <span class="o">%</span> <span class="n">host</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s">&#39;Such a host `%s` does not exist.&#39;</span> <span class="o">%</span> <span class="n">host</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Notes:</p>
@@ -687,7 +737,7 @@ reason codes can be looked up in the <em>pymqi.CMQC</em> module.</li>
 <span class="k">else</span><span class="p">:</span>
     <span class="k">for</span> <span class="n">header</span> <span class="ow">in</span> <span class="n">mi</span><span class="p">:</span>
         <span class="n">version</span> <span class="o">=</span> <span class="n">header</span><span class="p">[</span><span class="s">&#39;version&#39;</span><span class="p">]</span>
-        <span class="n">msg</span> <span class="o">=</span> <span class="s">&#39;Found package [%s], version [%s].&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">package_name</span><span class="p">,</span> <span class="n">version</span><span class="p">)</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s">&#39;Found package `%s`, version `%s`.&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">package_name</span><span class="p">,</span> <span class="n">version</span><span class="p">)</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -715,7 +765,7 @@ administration and that’s why it’s been shown here.</li>
     <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&#39;Could not find IBM MQ-related information in Windows registry.&#39;</span><span class="p">)</span>
 <span class="k">else</span><span class="p">:</span>
     <span class="n">version</span> <span class="o">=</span> <span class="n">_winreg</span><span class="o">.</span><span class="n">QueryValueEx</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="s">&#39;VRMF&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&#39;IBM MQ version is [%s].&#39;</span> <span class="o">%</span> <span class="n">version</span><span class="p">)</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&#39;IBM MQ version is `%s`.&#39;</span> <span class="o">%</span> <span class="n">version</span><span class="p">)</span>
 </pre></div>
 </div>
 <ul class="simple">
@@ -904,7 +954,7 @@ queue open options, both of which are used here to specify the alternate user ID
                 <span class="n">request_md</span><span class="o">.</span><span class="n">CorrelId</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQCI_NONE</span>
                 <span class="n">request_md</span><span class="o">.</span><span class="n">GroupId</span> <span class="o">=</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQGI_NONE</span>
 
-            <span class="k">except</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">MQMIError</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">except</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">MQMIError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">comp</span> <span class="o">==</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQCC_FAILED</span> <span class="ow">and</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span> <span class="o">==</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQRC_NO_MSG_AVAILABLE</span><span class="p">:</span>
                     <span class="c"># No messages, that&#39;s OK, we can ignore it.</span>
                     <span class="k">pass</span>
@@ -989,7 +1039,7 @@ the expected CorrelationId.</li>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="n">qmgr</span><span class="o">.</span><span class="n">connect_tcp_client</span><span class="p">(</span><span class="n">queue_manager</span><span class="p">,</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CD</span><span class="p">(),</span> <span class="n">channel</span><span class="p">,</span> <span class="n">conn_info</span><span class="p">)</span>
-<span class="k">except</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">MQMIError</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+<span class="k">except</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">MQMIError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
     <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">comp</span> <span class="o">==</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQCC_WARNING</span> <span class="ow">and</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span> <span class="o">==</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQRC_ALREADY_CONNECTED</span><span class="p">:</span>
         <span class="c"># Move along, nothing to see here..</span>
         <span class="k">pass</span>
@@ -1110,15 +1160,15 @@ and appropriate parameters may be loooked up in modules <em>pymqi.CMQC</em>, <em
 
 <span class="k">try</span><span class="p">:</span>
     <span class="n">response</span> <span class="o">=</span> <span class="n">pcf</span><span class="o">.</span><span class="n">MQCMD_INQUIRE_CHANNEL</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
-<span class="k">except</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">MQMIError</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+<span class="k">except</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">MQMIError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
     <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">comp</span> <span class="o">==</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQCC_FAILED</span> <span class="ow">and</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span> <span class="o">==</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQRC_UNKNOWN_OBJECT_NAME</span><span class="p">:</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&#39;No channels matched prefix [%s]&#39;</span> <span class="o">%</span> <span class="n">prefix</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&#39;No channels matched prefix `%s`&#39;</span> <span class="o">%</span> <span class="n">prefix</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span>
 <span class="k">else</span><span class="p">:</span>
     <span class="k">for</span> <span class="n">channel_info</span> <span class="ow">in</span> <span class="n">response</span><span class="p">:</span>
         <span class="n">channel_name</span> <span class="o">=</span> <span class="n">channel_info</span><span class="p">[</span><span class="n">CMQCFC</span><span class="o">.</span><span class="n">MQCACH_CHANNEL_NAME</span><span class="p">]</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&#39;Found channel [%s]&#39;</span> <span class="o">%</span> <span class="n">channel_name</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&#39;Found channel `%s`&#39;</span> <span class="o">%</span> <span class="n">channel_name</span><span class="p">)</span>
 
 <span class="n">qmgr</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
 </pre></div>
@@ -1158,7 +1208,7 @@ objects queried for.</li>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="n">response</span> <span class="o">=</span> <span class="n">pcf</span><span class="o">.</span><span class="n">MQCMD_INQUIRE_Q</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
-<span class="k">except</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">MQMIError</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+<span class="k">except</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">MQMIError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
     <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">comp</span> <span class="o">==</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQCC_FAILED</span> <span class="ow">and</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span> <span class="o">==</span> <span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQRC_UNKNOWN_OBJECT_NAME</span><span class="p">:</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&#39;No queues matched given arguments.&#39;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
@@ -1166,7 +1216,7 @@ objects queried for.</li>
 <span class="k">else</span><span class="p">:</span>
     <span class="k">for</span> <span class="n">queue_info</span> <span class="ow">in</span> <span class="n">response</span><span class="p">:</span>
         <span class="n">queue_name</span> <span class="o">=</span> <span class="n">queue_info</span><span class="p">[</span><span class="n">pymqi</span><span class="o">.</span><span class="n">CMQC</span><span class="o">.</span><span class="n">MQCA_Q_NAME</span><span class="p">]</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&#39;Found queue [%s]&#39;</span> <span class="o">%</span> <span class="n">queue_name</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&#39;Found queue `%s`&#39;</span> <span class="o">%</span> <span class="n">queue_name</span><span class="p">)</span>
 
 <span class="n">qmgr</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
 </pre></div>
@@ -1253,6 +1303,7 @@ argument-less command.</li>
 <li><a class="reference internal" href="#connecting-in-bindings-mode">Connecting in bindings mode</a></li>
 <li><a class="reference internal" href="#how-to-put-the-message-on-a-queue">How to put the message on a queue</a></li>
 <li><a class="reference internal" href="#how-to-get-the-message-off-a-queue">How to get the message off a queue</a></li>
+<li><a class="reference internal" href="#sending-unicode-data-vs-bytes">Sending Unicode data vs. bytes</a></li>
 <li><a class="reference internal" href="#how-to-get-a-message-without-jms-mqrfh2-headers">How to get a message without JMS (MQRFH2) headers</a></li>
 <li><a class="reference internal" href="#how-to-wait-for-a-single-message">How to wait for a single message</a></li>
 <li><a class="reference internal" href="#how-to-wait-for-multiple-messages">How to wait for multiple messages</a></li>
